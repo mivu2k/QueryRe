@@ -1,0 +1,99 @@
+@page "/"
+@inject QueryService QueryService
+
+<PageTitle>QueryRe — Ask your database</PageTitle>
+
+<section class="hero">
+    <span class="eyebrow">AI + SQL SERVER</span>
+    <h1>Ask your database in normal English.</h1>
+    <p>QueryRe asks a local AI model to write a SELECT query, checks it, and runs it with a read-only SQL Server account.</p>
+</section>
+
+<section class="question-card">
+    <label for="question">Your question</label>
+    <div class="question-row">
+        <input id="question"
+               @bind="question"
+               @bind:event="oninput"
+               placeholder="Example: Which country has the most customers?" />
+        <button @onclick="Ask" disabled="@loading">
+            @(loading ? "Working..." : "Ask")
+        </button>
+    </div>
+    <div class="examples">
+        @foreach (string example in examples)
+        {
+            <button @onclick="() => question = example">@example</button>
+        }
+    </div>
+</section>
+
+@if (answer is not null)
+{
+    <section class="answer-card">
+        <div class="answer-title">
+            <h2>Generated SQL</h2>
+            <span class="status @(answer.Success ? "good" : "bad")">
+                @(answer.Success ? "Safe and executed" : "Not executed")
+            </span>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(answer.Sql))
+        {
+            <pre><code>@answer.Sql</code></pre>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(answer.Error))
+        {
+            <p class="error">@answer.Error</p>
+        }
+
+        @if (answer.Success && answer.Columns.Count > 0)
+        {
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            @foreach (string column in answer.Columns)
+                            {
+                                <th>@column</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (List<string> row in answer.Rows)
+                        {
+                            <tr>
+                                @foreach (string value in row)
+                                {
+                                    <td>@value</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <p class="row-count">Showing @answer.Rows.Count row(s), maximum 100.</p>
+        }
+    </section>
+}
+
+@code {
+    private string question = "";
+    private bool loading;
+    private QueryAnswer? answer;
+
+    private readonly string[] examples =
+    {
+        "Show the top 5 customers",
+        "Which country has the most customers?",
+        "Show total sales by country"
+    };
+
+    private async Task Ask()
+    {
+        loading = true;
+        answer = await QueryService.AskAsync(question);
+        loading = false;
+    }
+}

@@ -1,0 +1,9 @@
+**/bin
+**/obj
+.git
+.github
+.gitlab
+publish
+*.zip
+*.user
+*.suo
