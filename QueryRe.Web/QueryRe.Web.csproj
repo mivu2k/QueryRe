@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>queryre-secrets</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QueryRe.Core\QueryRe.Core.csproj" />
+    <ProjectReference Include="..\QueryRe.Data\QueryRe.Data.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,27 @@
+stages:
+  - check
+  - package
+
+default:
+  tags:
+    - windows
+
+variables:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+
+check:
+  stage: check
+  script:
+    - dotnet restore QueryRe.sln
+    - dotnet build QueryRe.sln -c Release --no-restore
+    - dotnet test QueryRe.Tests -c Release --no-build
+
+package:
+  stage: package
+  script:
+    - dotnet publish QueryRe.Web -c Release -o publish/queryre
+  artifacts:
+    expire_in: 14 days
+    paths:
+      - publish/queryre/

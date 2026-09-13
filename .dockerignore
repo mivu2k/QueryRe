@@ -1,0 +1,11 @@
+**/bin
+**/obj
+.git
+.github
+.gitlab
+publish
+*.zip
+*.user
+*.suo
+*:Zone.Identifier
+Zone.Identifier

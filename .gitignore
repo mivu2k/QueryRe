@@ -1,0 +1,12 @@
+bin/
+obj/
+.vs/
+.idea/
+TestResults/
+publish/
+*.user
+appsettings.Development.json
+appsettings.Local.json
+db/Chinook_SqlServer.sql
+*:Zone.Identifier
+Zone.Identifier
